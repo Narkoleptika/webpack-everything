@@ -10,7 +10,7 @@ Dev server with SSR and HMR will run by default at http://localhost:3000
 npm run prod
 ```
 
-## SSl
+## SSL
 You should use SSL. ___This template assumes the use of encryption by default___. You will need to set the following environment variables to run production.
 * SSL - SSL port -- default: 3001
 * CERT - Path to the ssl certificate -- default: ./private/server.crt
