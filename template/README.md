@@ -36,7 +36,7 @@ Alternatively, you can run
 npm run prod--no-ssl
 ```
 
-#Environment Vars
+# Environment Vars
 * NODE_ENV
 * PORT - default: 3000
 * HOST - default: localhost
@@ -44,3 +44,7 @@ npm run prod--no-ssl
 * KEY - default: ./private/server.key
 * CERT - default: ./private/server.crt
 * NO_SSL
+
+# Thanks
+* [Vue](https://vuejs.org/)
+* [Vuetify](https://vuetifyjs.com/)
