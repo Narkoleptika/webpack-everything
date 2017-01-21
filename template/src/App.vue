@@ -18,6 +18,7 @@
             justify-content space-between
             line-height 60px
             padding 0 0 0 10px
+            shadow 2
 
             .brand
                 font-family serif
@@ -53,7 +54,7 @@
 
     .route-enter-active
     .route-leave-active
-        transition opacity transition
+        transition opacity transition-time
     .route-enter
     .route-leave-to
         opacity 0
