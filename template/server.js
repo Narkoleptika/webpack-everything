@@ -117,10 +117,11 @@ if (isProd && !process.env.NO_SSL) {
     const options = {
         key: fs.readFileSync(resolve(process.env.KEY || './private/server.key')),
         cert: fs.readFileSync(resolve(process.env.CERT || './private/server.crt')),
-        ca: process.env.CA ? fs.readFileSync(resolve('./private/server.ca')) : null
+        ca: process.env.CA ? fs.readFileSync(resolve(process.env.CA)) : null
     };
     express().all('*', (req, res)=> {
-        return res.redirect(301, `https://${host}:${ssl}${req.originalUrl}`);
+        let hostname = req.headers.host.replace(/:\d+$/, '');
+        return res.redirect(301, `https://${hostname}:${ssl}${req.originalUrl}`);
     }).listen(port, host, (err)=> {
         if (err) {
             console.error(err);
