@@ -36,6 +36,8 @@ Alternatively, you can run
 npm run prod--no-ssl
 ```
 
+__Please note:__ Service workers require ssl in order to work. If you don't use encryption, you will lose offline capabilities in production.
+
 # Environment Vars
 * NODE_ENV
 * PORT - default: 3000
