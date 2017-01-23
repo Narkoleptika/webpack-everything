@@ -1,3 +1,6 @@
+# Webpack Everything
+This is a vue-cli template that comes with webpack, server side rendering (SSR), route level code splitting, and progressive web app (PWA) capabilities. This template requires SSL in production in order to function properly.
+
 # Geting Started
 ```bash
 npm install || yarn
