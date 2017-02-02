@@ -3,6 +3,9 @@ This is a vue-cli template that comes with webpack, server side rendering (SSR),
 
 ## Geting Started
 ```bash
+npm install -g vue-cli || yarn global add vue-cli
+vue init narkoleptika/webpack-everything example-project
+cd example-project
 npm install || yarn
 npm run dev
 ```
