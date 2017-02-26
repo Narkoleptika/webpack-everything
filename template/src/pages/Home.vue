@@ -32,10 +32,10 @@
     export default {
         name: 'Home',
         preFetch() {
-            return this.methods.meta();
+            return this.methods.meta()
         },
         mounted() {
-            this.$emit('view', this.meta());
+            this.$emit('view', this.meta())
         },
         methods: {
             meta() {
@@ -43,8 +43,8 @@
                     title: 'Home | {{ project }}',
                     description: 'This is the home page.',
                     keywords: 'home, page, internet'
-                };
+                }
             }
         }
-    };
+    }
 </script>

@@ -21,4 +21,4 @@ npm install || yarn
 npm run dev
 
 More info in the README`
-};
+}

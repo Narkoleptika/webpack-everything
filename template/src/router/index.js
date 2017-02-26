@@ -1,12 +1,12 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from 'vue'
+import Router from 'vue-router'
 
-Vue.use(Router);
+Vue.use(Router)
 
 const splitPage = (page)=> process.BROWSER ? ()=> System.import(`pages/${page}`) : require(`pages/${page}`)
 
-const Home = splitPage('Home');
-const Test = splitPage('Test');
+const Home = splitPage('Home')
+const Test = splitPage('Test')
 
 export default new Router({
     mode: 'history',
@@ -19,4 +19,4 @@ export default new Router({
         name: 'Test',
         component: Test
     }]
-});
+})

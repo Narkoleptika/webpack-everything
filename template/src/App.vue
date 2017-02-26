@@ -85,15 +85,15 @@
         methods: {
             view({title, description, keywords}) {
                 if (title) {
-                    document.title = title;
+                    document.title = title
                 }
                 if (description) {
-                    document.head.querySelector('meta[name=description]').content = description;
+                    document.head.querySelector('meta[name=description]').content = description
                 }
                 if (keywords) {
-                    document.head.querySelector('meta[name=keywords]').content = keywords;
+                    document.head.querySelector('meta[name=keywords]').content = keywords
                 }
             }
         }
-    };
+    }
 </script>

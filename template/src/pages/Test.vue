@@ -12,14 +12,14 @@
     </div>
 </template>
 <script>
-    import TestComponent from 'components/TestComponent';
+    import TestComponent from 'components/TestComponent'
     export default {
         name: 'Test',
         preFetch() {
-            return this.methods.meta();
+            return this.methods.meta()
         },
         mounted() {
-            this.$emit('view', this.meta());
+            this.$emit('view', this.meta())
         },
         methods: {
             meta() {
@@ -27,11 +27,11 @@
                     title: 'Test | {{ project }}',
                     description: 'This is the Test page.',
                     keywords: 'test, page, internet'
-                };
+                }
             }
         },
         components: {
             TestComponent
         }
-    };
+    }
 </script>

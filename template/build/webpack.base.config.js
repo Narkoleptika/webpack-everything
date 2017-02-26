@@ -1,8 +1,8 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const path = require('path');
-const webpack = require('webpack');
-const vueConfig = require('./vue-loader.config');
-const isProd = process.env.NODE_ENV === 'production';
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const vueConfig = require('./vue-loader.config')
+const isProd = process.env.NODE_ENV === 'production'
 const config = {
     devtool: '#source-map',
     entry: {
@@ -81,7 +81,7 @@ const config = {
     },
     plugins: [],
     performance: false
-};
+}
 
 if (isProd) {
     config.plugins.push(
@@ -93,7 +93,7 @@ if (isProd) {
                 warnings: false
             }
         })
-    );
+    )
 }
 
-module.exports = config;
+module.exports = config

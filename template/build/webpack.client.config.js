@@ -1,9 +1,9 @@
-const base = require('./webpack.base.config');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HTMLPlugin = require('html-webpack-plugin');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
-const vueConfig = require('./vue-loader.config');
-const webpack = require('webpack');
+const base = require('./webpack.base.config')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const HTMLPlugin = require('html-webpack-plugin')
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const vueConfig = require('./vue-loader.config')
+const webpack = require('webpack')
 
 const config = Object.assign({}, base, {
     plugins: (base.plugins || []).concat([
@@ -39,7 +39,7 @@ const config = Object.assign({}, base, {
         }),
         new webpack.optimize.OccurrenceOrderPlugin()
     ])
-});
+})
 
 if (process.env.NODE_ENV === 'production') {
     vueConfig.loaders = Object.assign({}, vueConfig.loaders, {
@@ -47,7 +47,7 @@ if (process.env.NODE_ENV === 'production') {
             loader: 'css-loader!stylus-loader',
             fallbackLoader: 'vue-style-loader'
         })
-    });
+    })
     config.plugins.push(
         new ExtractTextPlugin({
             filename: 'styles.[contenthash].css',
@@ -66,7 +66,7 @@ if (process.env.NODE_ENV === 'production') {
                 'dist/**.js'
             ]
         })
-    );
+    )
 }
 
-module.exports = config;
+module.exports = config
