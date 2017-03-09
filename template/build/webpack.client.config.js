@@ -36,16 +36,15 @@ const config = Object.assign({}, base, {
                 removeComments: true
             },
             environment: process.env.NODE_ENV
-        }),
-        new webpack.optimize.OccurrenceOrderPlugin()
+        })
     ])
 })
 
 if (process.env.NODE_ENV === 'production') {
     vueConfig.loaders = Object.assign({}, vueConfig.loaders, {
         stylus: ExtractTextPlugin.extract({
-            loader: 'css-loader!stylus-loader',
-            fallbackLoader: 'vue-style-loader'
+            use: ['css-loader', 'stylus-loader'],
+            fallback: 'vue-style-loader'
         })
     })
     config.plugins.push(

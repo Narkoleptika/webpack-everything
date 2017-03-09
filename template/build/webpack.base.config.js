@@ -35,21 +35,27 @@ const config = {
         noParse: /es6-promise\.js$/,
         rules: [{
             test: /\.vue$/,
-            loader: 'vue-loader',
-            options: vueConfig
-        }, {
-            test: /\.js$/,
-            loader: 'buble-loader',
-            exclude: /node_modules/,
-            options: {
-                objectAssign: 'Object.assign'
+            use: {
+                loader: 'vue-loader',
+                options: vueConfig
             }
         }, {
+            test: /\.js$/,
+            use: {
+                loader: 'buble-loader',
+                options: {
+                    objectAssign: 'Object.assign'
+                }
+            },
+            exclude: /node_modules/
+        }, {
             test: /\.styl$/,
-            loader: isProd ? ExtractTextPlugin.extract(['css-loader', 'stylus-loader']) : 'style-loader!css-loader!stylus-loader'
+            use: isProd ?
+                ExtractTextPlugin.extract(['css-loader', 'stylus-loader']) :
+                ['style-loader', 'css-loader', 'stylus-loader']
         }, {
             test: /\.(png|jpe?g|gif|svg|ico)(\?.*)?$/,
-            loaders: [{
+            use: [{
                 loader: 'url-loader',
                 options: {
                     limit: 10000,
@@ -59,10 +65,14 @@ const config = {
                 loader: 'image-webpack-loader',
                 query: {
                     progressive: true,
-                    optimizationLevel: 7,
-                    interlaced: false,
                     mozjpeg: {
                         quality: 65
+                    },
+                    gifsicle: {
+                        interlaced: false
+                    },
+                    optipng: {
+                        optimizationLevel: 7
                     },
                     pngquant: {
                         quality: '65-90',
@@ -89,9 +99,7 @@ if (isProd) {
             minimize: true
         }),
         new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
+            sourceMap: true
         })
     )
 }
