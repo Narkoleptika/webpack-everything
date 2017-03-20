@@ -4,11 +4,6 @@ module.exports = {
             type: 'string',
             required: true,
             message: 'Project name'
-        },
-        authorName: {
-            type: 'string',
-            required: true,
-            message: 'Author Name'
         }
     },
     helpers: {

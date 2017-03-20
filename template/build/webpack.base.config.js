@@ -1,14 +1,12 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
-const vueConfig = require('./vue-loader.config')
 const isProd = process.env.NODE_ENV === 'production'
 const config = {
-    devtool: '#source-map',
+    devtool: '#eval-source-map',
     entry: {
-        app: './src/client-entry.js',
+        app: './src/entry-client.js',
         vendor: [
-            'es6-promise',
+            'es6-promise/auto',
             'vue',
             'vue-router',
             'vuex',
@@ -27,7 +25,8 @@ const config = {
             pages: path.resolve(__dirname, '../src/pages'),
             assets: path.resolve(__dirname, '../src/assets'),
             img: path.resolve(__dirname, '../src/assets/img'),
-            stylus: path.resolve(__dirname, '../src/assets/stylus')
+            stylus: path.resolve(__dirname, '../src/assets/stylus'),
+            helpers: path.resolve(__dirname, '../src/helpers')
         },
         extensions: ['.js', '.vue', '.styl']
     },
@@ -37,7 +36,16 @@ const config = {
             test: /\.vue$/,
             use: {
                 loader: 'vue-loader',
-                options: vueConfig
+                options: {
+                    postcss: [
+                        require('autoprefixer')({
+                            browsers: ['last 3 versions']
+                        })
+                    ],
+                    buble: {
+                        objectAssign: 'Object.assign'
+                    }
+                }
             }
         }, {
             test: /\.js$/,
@@ -48,11 +56,6 @@ const config = {
                 }
             },
             exclude: /node_modules/
-        }, {
-            test: /\.styl$/,
-            use: isProd ?
-                ExtractTextPlugin.extract(['css-loader', 'stylus-loader']) :
-                ['style-loader', 'css-loader', 'stylus-loader']
         }, {
             test: /\.(png|jpe?g|gif|svg|ico)(\?.*)?$/,
             use: [{
@@ -89,11 +92,22 @@ const config = {
             }]
         }]
     },
-    plugins: [],
+    plugins: [
+        new webpack.LoaderOptionsPlugin({
+            test: /\.(vue|styl)(\?.*)?$/,
+            stylus: {
+                default: {
+                    use: [require('nib')()],
+                    import: ['~nib/lib/nib/index.styl']
+                }
+            }
+        })
+    ],
     performance: false
 }
 
 if (isProd) {
+    config.devtool = '#source-map'
     config.plugins.push(
         new webpack.LoaderOptionsPlugin({
             minimize: true

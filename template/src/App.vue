@@ -1,4 +1,5 @@
-<style lang="stylus">
+<style lang="stylus" src="stylus"></style>
+<style lang="stylus" scoped>
     @import '~stylus/vars'
     @import '~stylus/mixins'
     #app
@@ -11,7 +12,7 @@
         shadow 4
         header
             background-color primary-color
-            color #fff
+            color white
             display flex
             font-size 1.25rem
             height 60px
@@ -24,7 +25,7 @@
                 font-family serif
                 font-size 2rem
                 flex 0 1 auto
-                color #fff
+                color white
                 text-decoration none
 
             nav
@@ -32,14 +33,14 @@
                 flex 0 1 auto
 
                 a
-                    color #fff
+                    color white
                     display inline-block
                     font-size 1.25rem
                     padding 0 10px
                     text-decoration none
                     &:hover
                     &.router-link-active
-                        background-color #435466
+                        background-color secondary-color
         main
         footer
             padding 10px
@@ -47,9 +48,9 @@
             font-size 1.3rem
             flex 1 0 auto
         footer
-            background-color #435466
+            background-color secondary-color
             font-size 0.8rem
-            color #fff
+            color white
             text-align center
 
     .route-enter-active

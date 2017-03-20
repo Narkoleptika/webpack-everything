@@ -3,17 +3,28 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const splitPage = (page)=> process.BROWSER ? ()=> System.import(`pages/${page}`) : require(`pages/${page}`)
-
-const Home = splitPage('Home')
-const Test = splitPage('Test')
+// Codesplit based on route
+const Home = ()=> System.import('pages/Home')
+const Test = ()=> System.import('pages/Test')
 
 export default new Router({
     mode: 'history',
+    scrollBehavior(to, from, savedPosition) {
+        let ret = { x: 0, y: 0 }
+        if (to.hash) {
+            ret = {selector: to.hash}
+        } else if (savedPosition) {
+            ret = savedPosition
+        }
+        return ret
+    },
     routes: [{
         path: '/',
         name: 'Home',
-        component: Home
+        component: Home,
+        meta: {
+            title: 'Test'
+        }
     }, {
         path: '/test',
         name: 'Test',

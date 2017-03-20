@@ -1,25 +1,13 @@
 const base = require('./webpack.base.config')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HTMLPlugin = require('html-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
-const vueConfig = require('./vue-loader.config')
 const webpack = require('webpack')
 
 const config = Object.assign({}, base, {
     plugins: (base.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-            'process.env.VUE_ENV': '"client"',
-            'process.BROWSER': true
-        }),
-        new webpack.LoaderOptionsPlugin({
-            test: /\.(vue|styl)(\?.*)?$/,
-            stylus: {
-                default: {
-                    use: [require('nib')()],
-                    import: ['~nib/lib/nib/index.styl']
-                }
-            }
+            'process.env.VUE_ENV': '"client"'
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor'
@@ -30,30 +18,17 @@ const config = Object.assign({}, base, {
         }),
         new HTMLPlugin({
             template: 'src/index.template.html',
-            inject: process.env.NODE_ENV === 'production' ? false : 'body',
             minify: {
-                collapseWhitespace: true,
-                removeComments: true
-            },
-            environment: process.env.NODE_ENV
+                collapseWhitespace: true
+            }
         })
     ])
 })
 
 if (process.env.NODE_ENV === 'production') {
-    vueConfig.loaders = Object.assign({}, vueConfig.loaders, {
-        stylus: ExtractTextPlugin.extract({
-            use: ['css-loader', 'stylus-loader'],
-            fallback: 'vue-style-loader'
-        })
-    })
     config.plugins.push(
-        new ExtractTextPlugin({
-            filename: 'styles.[contenthash].css',
-            allChunks: true
-        }),
         new SWPrecacheWebpackPlugin({
-            cacheId: 'project',
+            cacheId: '{{ name }}',
             filename: 'sw.js',
             runtimeCaching: [{
                 urlPattern: '/*',

@@ -5,30 +5,20 @@ const path = require('path')
 const express = require('express')
 const spdy = require('spdy')
 const compression = require('compression')
-const serialize = require('serialize-javascript')
-const resolve = file=> path.resolve(__dirname, file)
 const app = express()
 
-let indexHTML
-let renderer
+const port = process.env.PORT || 3000
+const host = process.env.HOST || '0.0.0.0'
 
-if (isProd) {
-    // in production: create server renderer and index HTML from real fs
-    renderer = createRenderer(fs.readFileSync(resolve('./dist/server.js'), 'utf-8'))
-    indexHTML = parseIndex(fs.readFileSync(resolve('./dist/index.html'), 'utf-8'))
-} else {
-    require('./build/setup-dev-server')(app, {
-        bundleUpdated: bundle=> {
-            renderer = createRenderer(bundle)
-        },
-        indexUpdated: index=> {
-            indexHTML = parseIndex(index)
-        }
-    })
-}
+const resolve = file=> path.resolve(__dirname, file)
 
-function createRenderer(bundle) {
+const serve = (path, cache)=> express.static(resolve(path), {
+    maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
+})
+
+const createRenderer = (bundle, template)=> {
     return require('vue-server-renderer').createBundleRenderer(bundle, {
+        template,
         cache: require('lru-cache')({
             max: 1000,
             maxAge: 1000 * 60 * 15
@@ -36,81 +26,46 @@ function createRenderer(bundle) {
     })
 }
 
-function parseIndex(template) {
-    const appMarker = '<div id="app"></div>'
-    const i = template.indexOf(appMarker)
-    return {
-        head: template.slice(0, i),
-        tail: template.slice(i + appMarker.length)
-    }
-}
+let renderer
 
-const serve = (path, cache)=> express.static(resolve(path), {
-    maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
-})
-
-function updateMeta(head, context) {
-    const title = context.title || false
-    const description = context.description || false
-    const keywords = context.keywords || false
-    if (title) {
-        head = head.replace(/(<title>)(.*?)(<\/title>)/, `$1${title}$3`)
-    }
-    if (description) {
-        head = head.replace(/(<meta name="description" content=")(.*?)(">)/, `$1${description}$3`)
-    }
-    if (keywords) {
-        head = head.replace(/(<meta name="keywords" content=")(.*?)(">)/, `$1${keywords}$3`)
-    }
-    return head
+if (isProd) {
+    // in production: create server renderer and index HTML from real fs
+    const bundle = require('./dist/vue-ssr-bundle.json')
+    const template = fs.readFileSync(resolve('./dist/index.html'), 'utf-8')
+    renderer = createRenderer(bundle, template)
+} else {
+    require('./build/setup-dev-server')(app, (bundle, template)=> {
+        renderer = createRenderer(bundle, template)
+    })
 }
 
 app.use(compression({threshold: 0}))
-app.use('/dist', serve('./dist'))
-app.use('/public', serve('./public'))
-app.use('/sw.js', serve('./dist/sw.js'))
+app.use('/dist', serve('./dist', true))
+app.use('/public', serve('./public', true))
+app.use('/sw.js', serve('./dist/sw.js', true))
 app.get('*', (req, res)=> {
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
     }
 
+    const s = Date.now()
+
     res.setHeader('Content-Type', 'text/html')
-    const context = {
-        url: req.url
-    }
 
-    const renderStream = renderer.renderToStream(context)
-
-    renderStream.once('data', ()=> {
-        res.write(updateMeta(indexHTML.head, context))
-    })
-
-    renderStream.on('data', chunk=> {
-        res.write(chunk)
-    })
-
-    renderStream.on('end', ()=> {
-        // embed initial store state
-        if (context.initialState) {
-            res.write(`<script>window.__INITIAL_STATE__=${serialize(context.initialState, { isJSON: true })}</script>`)
-        }
-        res.end(indexHTML.tail)
-    })
-
-    renderStream.on('error', err=> {
-        if (err && err.code === '404') {
-            res.status(404).end('404 | Page Not Found')
-            return
-        }
-        // Render Error Page or Redirect
-        res.status(500).end('Internal Error 500')
-        console.error(`error during render : ${req.url}`)
-        console.error(err)
-    })
+    renderer.renderToStream({url: req.url})
+        .on('end', ()=> console.log(`whole request: ${Date.now() - s}ms`))
+        .on('error', err=> {
+            if (err && err.code === '404') {
+                res.status(404).end('404 | Page Not Found')
+                return
+            }
+            // Render Error Page or Redirect
+            res.status(500).end('Internal Error 500')
+            console.error(`error during render : ${req.url}`)
+            console.error(err)
+        })
+        .pipe(res)
 })
-
-const port = process.env.PORT || 3000
-const host = process.env.HOST || 'localhost'
 
 if (isProd && !process.env.NO_SSL) {
     const ssl = process.env.SSL || 3001

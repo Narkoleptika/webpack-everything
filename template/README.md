@@ -47,7 +47,7 @@ __Please note:__ Service workers require ssl in order to work. If you don't use 
 ## Environment Vars
 * `NODE_ENV`
 * `PORT` - default: `3000`
-* `HOST` - default: `localhost`
+* `HOST` - default: `0.0.0.0`
 * `SSL` - default: `3001`
 * `KEY` - default: `./private/server.key`
 * `CERT` - default: `./private/server.crt`
@@ -56,4 +56,3 @@ __Please note:__ Service workers require ssl in order to work. If you don't use 
 ## Thanks
 * [Vue](https://vuejs.org/)
 * [Vuetify](https://vuetifyjs.com/)
-* [This hackernews 2.0 fork with lazy loading](https://github.com/Atinux/vue-hackernews-2.0-lazy/)

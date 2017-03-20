@@ -34,17 +34,15 @@
         preFetch() {
             return this.methods.meta()
         },
-        mounted() {
+        beforeMount() {
             this.$emit('view', this.meta())
         },
         methods: {
-            meta() {
-                return {
-                    title: 'Home | {{ project }}',
-                    description: 'This is the home page.',
-                    keywords: 'home, page, internet'
-                }
-            }
+            meta: ()=> ({
+                title: 'Home | {{ project }}',
+                description: 'This is the home page.',
+                keywords: 'home, page, internet'
+            })
         }
     }
 </script>

@@ -18,17 +18,15 @@
         preFetch() {
             return this.methods.meta()
         },
-        mounted() {
+        beforeMount() {
             this.$emit('view', this.meta())
         },
         methods: {
-            meta() {
-                return {
-                    title: 'Test | {{ project }}',
-                    description: 'This is the Test page.',
-                    keywords: 'test, page, internet'
-                }
-            }
+            meta: ()=> ({
+                title: 'Test | {{ project }}',
+                description: 'This is the Test page.',
+                keywords: 'test, page, internet'
+            })
         },
         components: {
             TestComponent
