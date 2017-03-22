@@ -25,10 +25,10 @@ const config = {
             pages: path.resolve(__dirname, '../src/pages'),
             assets: path.resolve(__dirname, '../src/assets'),
             img: path.resolve(__dirname, '../src/assets/img'),
-            stylus: path.resolve(__dirname, '../src/assets/stylus'),
+            {{ preprocessor }}: path.resolve(__dirname, '../src/assets/{{ preprocessor }}'),
             helpers: path.resolve(__dirname, '../src/helpers')
         },
-        extensions: ['.js', '.vue', '.styl']
+        extensions: ['.js', '.vue', '.{{ preprocessorExtension }}']
     },
     module: {
         noParse: /es6-promise\.js$/,
@@ -44,7 +44,10 @@ const config = {
                     ],
                     buble: {
                         objectAssign: 'Object.assign'
-                    }
+                    }{{#if_eq preprocessor 'scss'}},
+                    loaders: {
+                        scss: 'vue-style-loader!css-loader!sass-loader'
+                    }{{/if_eq}}
                 }
             }
         }, {
@@ -92,7 +95,7 @@ const config = {
             }]
         }]
     },
-    plugins: [
+    plugins: [{{#if_eq preprocessor 'stylus'}}
         new webpack.LoaderOptionsPlugin({
             test: /\.(vue|styl)(\?.*)?$/,
             stylus: {
@@ -102,7 +105,7 @@ const config = {
                 }
             }
         })
-    ],
+    {{/if_eq}}],
     performance: false
 }
 

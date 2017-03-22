@@ -1,0 +1,39 @@
+@mixin shadow($level: 1) {
+    $shadow: none;
+    @if ($level == 0) {
+        $shadow: none;
+    } @else if ($level == 1) {
+        $shadow: 0 1px 3px rgba($shadow-color, 0.12), 0 1px 2px rgba($shadow-color, 0.24);
+    } @else if ($level == 2) {
+        $shadow: 0 3px 6px rgba($shadow-color, 0.16), 0 3px 6px rgba($shadow-color, 0.23);
+    } @else if ($level == 3) {
+        $shadow: 0 10px 20px rgba($shadow-color, 0.19), 0 6px 6px rgba($shadow-color, 0.23);
+    } @else if ($level == 4) {
+        $shadow: 0 14px 28px rgba($shadow-color, 0.25), 0 10px 10px rgba($shadow-color, 0.22);
+    } @else if ($level == 5) {
+        $shadow: 0 19px 38px rgba($shadow-color, 0.30), 0 15px 12px rgba($shadow-color, 0.22);
+    } @else {
+        $shadow: 0 1px 3px rgba($shadow-color, 0.12), 0 1px 2px rgba($shadow-color, 0.24);
+    }
+    box-shadow: $shadow;
+}
+
+@mixin hoverable($n: 2, $h: 3, $top: 0, $position: relative, $bottom: 0) {
+    @include shadow($n);
+    position: $position;
+    @if ($bottom != 0) {
+        bottom: #{$bottom}px;
+    } @else {
+        top: #{$top}px;
+    }
+    transition: top $short-transition, bottom $short-transition, box-shadow $short-transition;
+
+    &:hover {
+        @include shadow($h);
+        @if ($bottom != 0) {
+            bottom: #{($bottom + $h)}px;
+        } @else {
+            top: #{($top - $h)}px;
+        }
+    }
+}
