@@ -4,14 +4,7 @@ const isProd = process.env.NODE_ENV === 'production'
 const config = {
     devtool: '#eval-source-map',
     entry: {
-        app: './src/entry-client.js',
-        vendor: [
-            'es6-promise/auto',
-            'vue',
-            'vue-router',
-            'vuex',
-            'vuex-router-sync'
-        ]
+        app: './src/entry-client.js'
     },
     output: {
         path: path.resolve(__dirname, '../dist'),

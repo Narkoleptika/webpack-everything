@@ -10,11 +10,13 @@ const config = Object.assign({}, base, {
             'process.env.VUE_ENV': '"client"'
         }),
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor'
+            name: 'vendor',
+            minChunks: function(module) {
+                return module.context && module.context.indexOf('node_modules') !== -1
+            }
         }),
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'manifest',
-            chunks: ['vendor']
+            name: 'manifest'
         }),
         new HTMLPlugin({
             template: 'src/index.template.html',
