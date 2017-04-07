@@ -34,6 +34,8 @@ openssl req -new -key server.key -out server.csr
 openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt
 ```
 
+It is a good idea to test production in incognito mode to avoid troubles clearing the 301 redirect later.
+
 ### No SSL
 If you really hate privacy you may set `NO_SSL`.
 
