@@ -14,7 +14,7 @@ const ssl = process.env.SSL || 3001
 const resolve = file=> path.resolve(__dirname, file)
 
 const serve = (path, cache)=> express.static(resolve(path), {
-    maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
+    maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
 })
 
 const createRenderer = (bundle, template)=> {
