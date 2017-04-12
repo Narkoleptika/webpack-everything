@@ -3,30 +3,43 @@
         <h1>Test</h1>
         <img class="img--responsive" src="~img/lorempixel.jpg" alt="lorempixel.com">
         <test-component />
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam recusandae, repudiandae corrupti dolor earum
-            quibusdam molestiae obcaecati perspiciatis repellendus sequi a quod ea praesentium maxime unde architecto
-            dignissimos non ipsum mollitia, fugiat qui, quo enim accusamus. Id similique voluptatibus facilis, ad
-            perferendis distinctio consequatur impedit, dolorem repellendus ab ipsa. Necessitatibus.
-        </p>
+        <p>{{testContent}}</p>
     </div>
 </template>
 <script>
+    import { mapState, mapActions } from 'vuex'
     import TestComponent from 'components/TestComponent'
     export default {
         name: 'Test',
-        preFetch() {
-            return this.methods.meta()
+        computed: {
+            ...mapState([
+                'testContent'
+            ])
+        },
+        preFetch(store) {
+            return store.dispatch('getTestTitle').then(()=> {
+                return store.dispatch('getTestContent').then(()=> {
+                    return this.methods.meta(store)
+                })
+            })
         },
         beforeMount() {
-            this.$emit('view', this.meta())
+            this.getTestTitle().then(()=> {
+                this.getTestContent().then(()=> {
+                    this.$emit('view', this.meta(this.$store))
+                })
+            })
         },
         methods: {
-            meta: ()=> ({
-                title: 'Test | {{ project }}',
+            meta: store=> ({
+                title: store.state.testTitle,
                 description: 'This is the Test page.',
                 keywords: 'test, page, internet'
-            })
+            }),
+            ...mapActions([
+                'getTestTitle',
+                'getTestContent'
+            ])
         },
         components: {
             TestComponent

@@ -35,6 +35,7 @@ module.exports = {
             return ret
         }
     },
+    skipInterpolation: 'src/pages/Test.vue',
     completeMessage: `To get started:
 
 {{#inPlace}}npm install && npm run dev{{else}}cd {{destDirName}} && npm install && npm run dev{{/inPlace}}
