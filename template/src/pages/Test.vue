@@ -17,17 +17,13 @@
             ])
         },
         preFetch(store) {
-            return store.dispatch('getTestTitle').then(()=> {
-                return store.dispatch('getTestContent').then(()=> {
-                    return this.methods.meta(store)
-                })
+            return store.dispatch('getTestData').then(()=> {
+                return this.methods.meta(store)
             })
         },
         beforeMount() {
-            this.getTestTitle().then(()=> {
-                this.getTestContent().then(()=> {
-                    this.$emit('view', this.meta(this.$store))
-                })
+            this.getTestData().then(()=> {
+                this.$emit('view', this.meta(this.$store))
             })
         },
         methods: {
@@ -37,8 +33,7 @@
                 keywords: 'test, page, internet'
             }),
             ...mapActions([
-                'getTestTitle',
-                'getTestContent'
+                'getTestData'
             ])
         },
         components: {
