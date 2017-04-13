@@ -17,12 +17,12 @@
             ])
         },
         preFetch(store) {
-            return store.dispatch('getTestData').then(()=> {
+            return store.dispatch('getData', ['getTestTitle', 'getTestContent']).then(()=> {
                 return this.methods.meta(store)
             })
         },
         beforeMount() {
-            this.getTestData().then(()=> {
+            this.getData(['getTestTitle', 'getTestContent']).then(()=> {
                 this.$emit('view', this.meta(this.$store))
             })
         },
@@ -33,7 +33,7 @@
                 keywords: 'test, page, internet'
             }),
             ...mapActions([
-                'getTestData'
+                'getData'
             ])
         },
         components: {

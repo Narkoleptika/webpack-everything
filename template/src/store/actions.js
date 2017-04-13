@@ -1,9 +1,6 @@
 export default {
+    getData: ({ dispatch }, actions)=> Promise.all(actions.map(action=> dispatch(action))),
     // Fake Async API Calls
-    getTestData: ({ dispatch })=> Promise.all([
-        dispatch('getTestTitle'),
-        dispatch('getTestContent')
-    ]),
     getTestTitle: ({ commit })=> new Promise(resolve=> {
         setTimeout(()=> {
             commit('SET_TEST_TITLE', 'Test | {{ project }}')
