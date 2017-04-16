@@ -1,6 +1,12 @@
 # Webpack Everything
 This is a vue-cli template that comes with webpack, server side rendering (SSR), route level code splitting, and progressive web app (PWA) capabilities. This template requires SSL in production in order to function properly.
 
+## Lighthouse Score
+[![Lighthouse Score](https://raw.githubusercontent.com/Narkoleptika/webpack-everything/master/lighthouse.png)Lighthouse Score for /](https://googlechrome.github.io/lighthouse/viewer/?gist=1714c891a643c7a55ff24361b7c1a270)
+
+[![Lighthouse Score](https://raw.githubusercontent.com/Narkoleptika/webpack-everything/master/lighthouse.png)Lighthouse Score for /test](https://googlechrome.github.io/lighthouse/viewer/?gist=b04c8377cf5bdd07a0d4ae6b5c0f0329)
+
+
 ## Preprocessors
 Choose from
 1. Stylus

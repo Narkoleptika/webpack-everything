@@ -32,7 +32,7 @@ const config = {
                 options: {
                     postcss: [
                         require('autoprefixer')({
-                            browsers: ['last 3 versions']
+                            browsers: ['last 1 versions']
                         })
                     ],
                     buble: {
