@@ -40,6 +40,20 @@ if (isProd) {
     })
 }
 
+const render = (req, res, context, s)=> renderer.renderToStream(context)
+    .on('end', ()=> console.log(`whole request: ${Date.now() - s}ms`))
+    .on('error', err=> {
+        if (err && err.code === '404') {
+            res.status(404)
+            return render(req, res, {url: '/404'}, s)
+        }
+        // Render Error Page or Redirect
+        res.status(500).end('Internal Error 500')
+        console.error(`error during render : ${req.url}`)
+        console.error(err)
+    })
+    .pipe(res)
+
 app.use((req, res, next)=> {
     if (isProd && !req.secure && !process.env.NO_SSL) {
         let hostname = req.headers.host.replace(/:\d+$/, '')
@@ -61,19 +75,7 @@ app.get('*', (req, res)=> {
 
     res.setHeader('Content-Type', 'text/html')
 
-    renderer.renderToStream({url: req.url})
-        .on('end', ()=> console.log(`whole request: ${Date.now() - s}ms`))
-        .on('error', err=> {
-            if (err && err.code === '404') {
-                res.status(404).end('404 | Page Not Found')
-                return
-            }
-            // Render Error Page or Redirect
-            res.status(500).end('Internal Error 500')
-            console.error(`error during render : ${req.url}`)
-            console.error(err)
-        })
-        .pipe(res)
+    render(req, res, {url: req.url}, s)
 })
 
 app.listen(port, host, (err)=> {

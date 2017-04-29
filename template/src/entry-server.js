@@ -14,10 +14,12 @@ export default context=> {
         router.onReady(()=> {
             const matchedComponents = router.getMatchedComponents()
             // no matched routes
-            if (!matchedComponents.length) {
-                reject({
-                    code: '404'
-                })
+            if (matchedComponents.reduce((a, c)=> a === true ? a : c.name === 'NotFound', false)) {
+                if (context.url !== '/404') {
+                    reject({
+                        code: '404'
+                    })
+                }
             }
             // Call preFetch hooks on components matched by the route.
             // A preFetch hook dispatches a store action and returns a Promise,

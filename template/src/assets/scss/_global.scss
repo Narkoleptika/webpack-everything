@@ -16,7 +16,12 @@ p {
 }
 
 a {
+    color: $secondary-color;
+    text-decoration: none;
     transition: color $transition-time, background-color $transition-time;
+    &:hover {
+        color: $primary-color;
+    }
 }
 
 .img--responsive {
