@@ -7,8 +7,10 @@ import mutations from './mutations'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const options = {
     state,
     actions,
     mutations
-})
+}
+
+export default ()=> new Vuex.Store(options)

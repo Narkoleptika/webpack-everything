@@ -163,15 +163,9 @@
     export default {
         name: 'App',
         methods: {
-            view({title, description, keywords}) {
+            view({title}) {
                 if (title) {
                     document.title = title
-                }
-                if (description) {
-                    document.head.querySelector('meta[name=description]').content = description
-                }
-                if (keywords) {
-                    document.head.querySelector('meta[name=keywords]').content = keywords
                 }
             }
         }

@@ -8,7 +8,7 @@ const Home = ()=> System.import('pages/Home')
 const Test = ()=> System.import('pages/Test')
 const NotFound = ()=> System.import('pages/NotFound')
 
-export default new Router({
+const options = {
     mode: 'history',
     scrollBehavior(to, from, savedPosition) {
         let ret = { x: 0, y: 0 }
@@ -32,4 +32,6 @@ export default new Router({
         name: 'NotFound',
         component: NotFound
     }]
-})
+}
+
+export default ()=> new Router(options)

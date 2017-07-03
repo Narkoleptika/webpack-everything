@@ -1,11 +1,13 @@
-import { app, router, store } from './app'
+import createApp from './app'
 import { generateHead } from 'helpers'
+
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
 // state of our application before actually rendering it.
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
 export default context=> {
+    const { app, router, store } = createApp()
     const s = Date.now()
     return new Promise((resolve, reject)=> {
         // set router's location
@@ -17,7 +19,9 @@ export default context=> {
             if (matchedComponents.reduce((a, c)=> a === true ? a : c.name === 'NotFound', false)) {
                 if (context.url !== '/404') {
                     reject({
-                        code: '404'
+                        code: 404,
+                        url: '/404',
+                        manual: true
                     })
                 }
             }

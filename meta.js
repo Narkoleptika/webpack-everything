@@ -15,8 +15,8 @@ module.exports = {
         }
     },
     filters: {
-        'src/assets/stylus/**/*': 'preprocessor === "stylus"',
-        'src/assets/scss/**/*': 'preprocessor === "scss"'
+        'client/assets/stylus/**/*': 'preprocessor === "stylus"',
+        'client/assets/scss/**/*': 'preprocessor === "scss"'
     },
     helpers: {
         year: ()=> new Date().getFullYear(),
@@ -35,7 +35,7 @@ module.exports = {
             return ret
         }
     },
-    skipInterpolation: 'src/pages/Test.vue',
+    skipInterpolation: 'client/pages/Test.vue',
     completeMessage: `To get started:
 
 {{#inPlace}}npm install && npm run dev{{else}}cd {{destDirName}} && npm install && npm run dev{{/inPlace}}

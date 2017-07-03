@@ -52,14 +52,15 @@ openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out serv
 It is a good idea to test production in incognito mode to avoid troubles clearing the 301 redirect later.
 
 ### No SSL
-If you really hate privacy you may set `NO_SSL`.
-
-Alternatively, you can run
+Use the following to test production without SSL
 ```bash
 npm run prod--no-ssl
 ```
 
-__Please note:__ Service workers require ssl in order to work. If you don't use encryption, you will lose offline capabilities in production.
+__Please note:__ Service workers require ssl in order to work. If you don't use encryption, you will lose offline capabilities.
+
+## Bundle Analyzer
+This template comes with `webpack-bundle-analyzer` which will generate a report of the chunks that get output from webpack. It will run by default in development and can be enabled for production by setting the `STATS` env var.
 
 ## Environment Vars
 * `NODE_ENV`
@@ -68,7 +69,9 @@ __Please note:__ Service workers require ssl in order to work. If you don't use 
 * `SSL` - default: `3001`
 * `KEY` - default: `./private/server.key`
 * `CERT` - default: `./private/server.crt`
+* `CA`
 * `NO_SSL`
+* `STATS`
 
 ## Thanks
 * [Vue](https://vuejs.org/)

@@ -4,22 +4,23 @@ const isProd = process.env.NODE_ENV === 'production'
 const config = {
     devtool: '#eval-source-map',
     entry: {
-        app: './src/entry-client.js'
+        app: './client/entry-client.js'
     },
     output: {
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/',
-        filename: '[name].[chunkhash].js'
+        filename: '[name].[chunkhash].js',
+        chunkFilename: isProd ? '[name].[chunkhash].js' : '[name].js'
     },
     resolve: {
         alias: {
             public: path.resolve(__dirname, '../public'),
-            components: path.resolve(__dirname, '../src/components'),
-            pages: path.resolve(__dirname, '../src/pages'),
-            assets: path.resolve(__dirname, '../src/assets'),
-            img: path.resolve(__dirname, '../src/assets/img'),
-            {{ preprocessor }}: path.resolve(__dirname, '../src/assets/{{ preprocessor }}'),
-            helpers: path.resolve(__dirname, '../src/helpers')
+            components: path.resolve(__dirname, '../client/components'),
+            pages: path.resolve(__dirname, '../client/pages'),
+            assets: path.resolve(__dirname, '../client/assets'),
+            img: path.resolve(__dirname, '../client/assets/img'),
+            {{ preprocessor }}: path.resolve(__dirname, '../client/assets/{{ preprocessor }}'),
+            helpers: path.resolve(__dirname, '../client/helpers')
         },
         extensions: ['.js', '.vue', '.{{ preprocessorExtension }}']
     },
@@ -58,7 +59,7 @@ const config = {
                 loader: 'url-loader',
                 options: {
                     limit: 10000,
-                    name: 'img/[name].[hash:7].[ext]'
+                    name: isProd ? 'img/[name].[hash:7].[ext]' : 'img/[name].[ext]'
                 }
             }, {
                 loader: 'image-webpack-loader',
@@ -88,7 +89,8 @@ const config = {
             }]
         }]
     },
-    plugins: [{{#if_eq preprocessor 'stylus'}}
+    plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(){{#if_eq preprocessor 'stylus'}},
         new webpack.LoaderOptionsPlugin({
             test: /\.(vue|styl)(\?.*)?$/,
             stylus: {
@@ -97,8 +99,8 @@ const config = {
                     import: ['~nib/lib/nib/index.styl']
                 }
             }
-        })
-    {{/if_eq}}],
+        }){{/if_eq}}
+    ],
     performance: false
 }
 
