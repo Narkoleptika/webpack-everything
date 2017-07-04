@@ -89,8 +89,7 @@ const config = {
             }]
         }]
     },
-    plugins: [
-        new webpack.optimize.ModuleConcatenationPlugin(){{#if_eq preprocessor 'stylus'}},
+    plugins: [{{#if_eq preprocessor 'stylus'}}
         new webpack.LoaderOptionsPlugin({
             test: /\.(vue|styl)(\?.*)?$/,
             stylus: {
@@ -99,8 +98,7 @@ const config = {
                     import: ['~nib/lib/nib/index.styl']
                 }
             }
-        }){{/if_eq}}
-    ],
+        }){{/if_eq}}],
     performance: false
 }
 

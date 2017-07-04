@@ -41,6 +41,7 @@ const config = Object.assign({}, base, {
 
 if (isProd) {
     config.plugins.push(
+        new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'app',
             async: 'app-async',
