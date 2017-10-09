@@ -54,7 +54,7 @@ if (isProd) {
             filename: 'sw.js',
             runtimeCaching: [{
                 urlPattern: '/*',
-                handler: 'cacheFirst'
+                handler: 'networkFirst'
             }],
             staticFileGlobs: [
                 'dist/**.css',

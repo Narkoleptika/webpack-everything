@@ -38,12 +38,9 @@ const config = {
                 options: {
                     postcss: [
                         require('autoprefixer')({
-                            browsers: ['last 1 versions']
+                            browsers: ['last 5 versions']
                         })
-                    ],
-                    buble: {
-                        objectAssign: 'Object.assign'
-                    }{{#if_eq preprocessor 'scss'}},
+                    ]{{#if_eq preprocessor 'scss'}},
                     loaders: {
                         scss: 'vue-style-loader!css-loader!sass-loader'
                     }{{/if_eq}}
@@ -52,10 +49,7 @@ const config = {
         }, {
             test: /\.js$/,
             use: {
-                loader: 'buble-loader',
-                options: {
-                    objectAssign: 'Object.assign'
-                }
+                loader: 'babel-loader'
             },
             exclude: /node_modules/
         }, {
@@ -69,8 +63,8 @@ const config = {
             }, {
                 loader: 'image-webpack-loader',
                 query: {
-                    progressive: true,
                     mozjpeg: {
+                        progressive: true,
                         quality: 65
                     },
                     gifsicle: {
