@@ -12,11 +12,16 @@ module.exports = {
                 'stylus',
                 'scss'
             ]
+        },
+        eslint: {
+            type: 'confirm',
+            message: 'Use ESLint?'
         }
     },
     filters: {
         'client/assets/stylus/**/*': 'preprocessor === "stylus"',
-        'client/assets/scss/**/*': 'preprocessor === "scss"'
+        'client/assets/scss/**/*': 'preprocessor === "scss"',
+        '.eslintrc.js': 'eslint === true'
     },
     helpers: {
         year: ()=> new Date().getFullYear(),

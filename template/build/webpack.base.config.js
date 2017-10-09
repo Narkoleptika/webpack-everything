@@ -26,7 +26,12 @@ const config = {
     },
     module: {
         noParse: /es6-promise\.js$/,
-        rules: [{
+        rules: [{{#if_eq eslint true}}{
+            test: /\.js|vue$/,
+            use: 'eslint-loader',
+            enforce: 'pre',
+            exclude: /node_modules/
+        }, {{/if_eq}}{
             test: /\.vue$/,
             use: {
                 loader: 'vue-loader',

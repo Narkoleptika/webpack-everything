@@ -1,5 +1,5 @@
 # Webpack Everything
-This is a vue-cli template that comes with webpack, server side rendering (SSR), route level code splitting, and progressive web app (PWA) capabilities. This template requires SSL in production in order to function properly.
+This is a vue-cli template that comes with webpack, ESLint, server side rendering (SSR), route level code splitting, and progressive web app (PWA) capabilities. This template requires SSL in production in order to function properly.
 
 ## Preprocessors
 Choose from
@@ -48,6 +48,9 @@ npm run prod--no-ssl
 ```
 
 __Please note:__ Service workers require ssl in order to work. If you don't use encryption, you will lose offline capabilities.
+
+## ESLint
+Optionally, you can choose to include ESLint. This will include eslint-loader which will display errors on an overlay when there are lint errors
 
 ## Bundle Analyzer
 This template comes with `webpack-bundle-analyzer` which will generate a report of the chunks that get output from webpack. It will run by default in development and can be enabled for production by setting the `STATS` env var.
