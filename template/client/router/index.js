@@ -3,10 +3,15 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-// Codesplit based on route
-const Home = ()=> System.import('pages/Home')
-const Test = ()=> System.import('pages/Test')
-const NotFound = ()=> System.import('pages/NotFound')
+const loadPage = name=> ()=> import(`pages/${name}`)
+
+const pages = [
+    'Home',
+    'Test',
+    'NotFound'
+]
+    .map(page=> ({ name: page, component: loadPage(page) }))
+    .reduce((sum, { name, component })=> ({...sum, [name]: component}), {})
 
 const options = {
     mode: 'history',
@@ -22,15 +27,15 @@ const options = {
     routes: [{
         path: '/',
         name: 'Home',
-        component: Home
+        component: pages.Home
     }, {
         path: '/test',
         name: 'Test',
-        component: Test
+        component: pages.Test
     }, {
         path: '*',
         name: 'NotFound',
-        component: NotFound
+        component: pages.NotFound
     }]
 }
 
