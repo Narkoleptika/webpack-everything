@@ -19,7 +19,8 @@
         {{ htmlStyles }}
     </head>
     <body>
-        <!--vue-ssr-outlet-->
+        <!--vue-ssr-outlet-->{{#if_eq apollo true}}
+        {{ htmlApollo }}{{/if_eq}}
         {{ htmlState }}
         {{ htmlScripts }}
     </body>

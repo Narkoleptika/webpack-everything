@@ -16,17 +16,26 @@ module.exports = {
         eslint: {
             type: 'confirm',
             message: 'Use ESLint?'
+        },
+        apollo: {
+            type: 'confirm',
+            message: 'Include Vue Apollo and Graphql?'
         }
     },
     filters: {
         'client/assets/stylus/**/*': 'preprocessor === "stylus"',
         'client/assets/scss/**/*': 'preprocessor === "scss"',
+        'client/pages/Apollo.vue': 'apollo === true',
+        'client/apollo/**/*': 'apollo === true',
+        'server/api.js': 'apollo === true',
+        'server/graphql/**/*': 'apollo === true',
         '.eslintrc.js': 'eslint === true'
     },
     helpers: {
         htmlTitle: ()=> '{{title}}',
         htmlResourceHints: ()=> '{{{ renderResourceHints() }}}',
         htmlStyles: ()=> '{{{ renderStyles() }}}',
+        htmlApollo: ()=> '<script>{{{ apollo }}}</script>',
         htmlState: ()=> '{{{ renderState() }}}',
         htmlScripts: ()=> '{{{ renderScripts() }}}',
         year: ()=> new Date().getFullYear(),
@@ -45,7 +54,10 @@ module.exports = {
             return ret
         }
     },
-    skipInterpolation: 'client/pages/Test.vue',
+    skipInterpolation: [
+        'client/pages/Test.vue',
+        'client/pages/Apollo.vue'
+    ],
     completeMessage: `To get started:
 
 {{#inPlace}}npm install && npm run dev{{else}}cd {{destDirName}} && npm install && npm run dev{{/inPlace}}

@@ -146,7 +146,8 @@
             <router-link :to="{name: 'Home'}" class="brand">{{ project }}</router-link>
             <nav>
                 <router-link :to="{name: 'Home'}" exact>Home</router-link>
-                <router-link :to="{name: 'Test'}" exact>Test</router-link>
+                <router-link :to="{name: 'Test'}" exact>Test</router-link>{{#if_eq apollo true}}
+                <router-link :to="{name: 'Apollo'}" exact>Apollo</router-link>{{/if_eq}}
             </nav>
         </header>
         <main>

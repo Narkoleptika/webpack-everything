@@ -16,7 +16,10 @@ module.exports = Object.assign({}, base, {
     plugins: (base.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-            'process.env.VUE_ENV': '"server"'
+            'process.env.VUE_ENV': '"server"'{{#if_eq apollo true}},
+            'process.env.ORIGIN': JSON.stringify(process.env.ORIGIN || 'localhost'),
+            'process.env.API_PORT': JSON.stringify(process.env.API_PORT || '3002'),
+            'process.env.API_SSL': JSON.stringify(process.env.API_SSL || '3003'){{/if_eq}}
         }),
         new VueSSRServerPlugin()
     ])

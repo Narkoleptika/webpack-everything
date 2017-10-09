@@ -6,7 +6,7 @@ import createApp from './app'
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
 export default context=> {
-    const { app, router, store } = createApp()
+    const { app, router, store{{#if_eq apollo true}}, apolloProvider{{/if_eq}} } = createApp()
     const s = Date.now()
     return new Promise((resolve, reject)=> {
         // set router's location
@@ -28,10 +28,19 @@ export default context=> {
             // A preFetch hook dispatches a store action and returns a Promise,
             // which is resolved when the action is complete and store state has been
             // updated.
-            return Promise.all(matchedComponents.map(component=> {
-                return component.preFetch && component.preFetch(store)
-            })).then((meta)=> {
-                console.log(`data pre-fetch: ${Date.now() - s}ms`)
+            return Promise.all({{#if_eq apollo true}}[
+                ...{{/if_eq}}matchedComponents.map(component=> (
+                {{#if_eq apollo true}}    {{/if_eq}}component.preFetch && component.preFetch({ store, reject }))
+            {{#if_eq apollo true}}    {{/if_eq}}){{#if_eq apollo true}},
+                apolloProvider.prefetchAll({
+                    route: router.currentRoute
+                }, matchedComponents)
+            ]{{/if_eq}}).then(([preFetchData{{#if_eq apollo true}}, apolloData{{/if_eq}}])=> Promise.all(
+                matchedComponents.map(component=> (
+                    component.postFetch && component.postFetch({ preFetchData, {{#if_eq apollo true}}apolloData, {{/if_eq}}store, reject }))
+                ))
+            ).then(()=> {
+                console.log(`data fetch: ${Date.now() - s}ms`)
                 // After all preFetch hooks are resolved, our store is now
                 // filled with the state needed to render the app.
                 // Expose the state on the render context, and let the request handler
@@ -40,6 +49,7 @@ export default context=> {
                 // the initial data fetching on the client.
 
                 context.state = store.state{{#if_eq apollo true}}
+                context.apollo = apolloProvider.exportStates(){{/if_eq}}
 
                 resolve(app)
             }).catch(reject)

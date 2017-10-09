@@ -26,7 +26,7 @@
                 'testContent'
             ])
         },
-        preFetch(store) {
+        preFetch({ store }) {
             return store.dispatch('getData', ['getTestTitle', 'getTestContent'])
         },
         beforeMount() {

@@ -1,5 +1,5 @@
 # Webpack Everything
-This is a vue-cli template that comes with webpack, ESLint, server side rendering (SSR), route level code splitting, and progressive web app (PWA) capabilities. This template requires SSL in production in order to function properly.
+This is a vue-cli template that comes with webpack, ESLint, server side rendering (SSR), route level code splitting, apollo + graphql and progressive web app (PWA) capabilities. This template requires SSL in production in order to function properly.
 
 ## Preprocessors
 Choose from
@@ -49,6 +49,22 @@ npm run prod--no-ssl
 
 __Please note:__ Service workers require ssl in order to work. If you don't use encryption, you will lose offline capabilities.
 
+## Apollo + GraphQL
+Optionally, you can choose to include a GraphQL server with Apollo integration.
+
+When Apollo + GraphQL is included, you will need to run an additional server with the following command
+
+```bash
+npm run api:dev
+```
+
+### Production
+```bash
+npm run api
+```
+
+The api will use the same `KEY`, `CERT`, and `CA` env vars in production
+
 ## ESLint
 Optionally, you can choose to include ESLint. This will include eslint-loader which will display errors on an overlay when there are lint errors
 
@@ -56,10 +72,25 @@ Optionally, you can choose to include ESLint. This will include eslint-loader wh
 This template comes with `webpack-bundle-analyzer` which will generate a report of the chunks that get output from webpack. It will run by default in development and can be enabled for production by setting the `STATS` env var.
 
 ## Environment Vars
+### Without Apollo
 * `NODE_ENV`
 * `PORT` - default: `3000`
 * `HOST` - default: `0.0.0.0`
 * `SSL` - default: `3001`
+* `KEY` - default: `./private/server.key`
+* `CERT` - default: `./private/server.crt`
+* `CA`
+* `NO_SSL`
+* `STATS`
+### With Apollo
+* `NODE_ENV`
+* `RENDERER_PORT` - default: `3000`
+* `RENDERER_HOST` - default: `0.0.0.0`
+* `RENDERER_SSL` - default: `3001`
+* `API_PORT` - default: `3002`
+* `API_HOST` - default: `0.0.0.0`
+* `API_SSL` - default: `3003`
+* `ORIGIN` - default: `localhost`
 * `KEY` - default: `./private/server.key`
 * `CERT` - default: `./private/server.crt`
 * `CA`

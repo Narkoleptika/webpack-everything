@@ -1,21 +1,21 @@
-process.env.VUE_ENV = 'server'
-const isProd = process.env.NODE_ENV === 'production'
+{{#if_eq apollo true}}require('isomorphic-fetch')
+{{/if_eq}}process.env.VUE_ENV = 'server'
 const fs = require('fs')
-const path = require('path')
 const express = require('express')
 const spdy = require('spdy')
 const compression = require('compression')
+const { isProd, resolve, serve } = require('./helpers')
 const app = express()
 
-const port = process.env.PORT || 3000
-const host = process.env.HOST || '0.0.0.0'
-const ssl = process.env.SSL || 3001
-
-const resolve = file=> path.resolve(__dirname, file)
-
-const serve = (path, cache)=> express.static(resolve(path), {
-    maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
-})
+const {
+    {{#if_eq apollo true}}RENDERER_PORT: {{/if_eq}}PORT = 3000,
+    {{#if_eq apollo true}}RENDERER_HOST: {{/if_eq}}HOST = '0.0.0.0',
+    {{#if_eq apollo true}}RENDERER_SSL: {{/if_eq}}SSL = 3001,
+    NO_SSL = false,
+    KEY = '../private/server.key',
+    CERT = '../private/server.crt',
+    CA
+} = process.env
 
 const createRenderer = (serverBundle, clientManifest, template)=> {
     return require('vue-server-renderer').createBundleRenderer(serverBundle, {
@@ -44,23 +44,27 @@ if (isProd) {
 }
 
 const render = (req, res, context, s)=> renderer.renderToStream(context)
-    .on('end', ()=> console.log(`whole request: ${Date.now() - s}ms`))
+    .on('end', ()=> {
+        console.log(`whole request: ${Date.now() - s}ms`)
+    })
     .on('error', err=> {
-        if (err && err.manual) {
-            res.status(err.code)
-            return render(req, res, {url: err.url}, s)
-        }
         // Render Error Page or Redirect
-        res.status(500).end('Internal Error 500')
         console.error(`error during render : ${req.url}`)
-        console.error(err)
+        if (err) {
+            console.error(err)
+            if (err.manual) {
+                res.status(err.code)
+                return render(req, res, {url: err.url}, s)
+            }
+        }
+        res.status(500).end('Internal Error 500')
     })
     .pipe(res)
 
 app.use((req, res, next)=> {
-    if (isProd && !req.secure && !process.env.NO_SSL) {
+    if (isProd && !req.secure && !NO_SSL) {
         let hostname = req.headers.host.replace(/:\d+$/, '')
-        return res.redirect(301, `https://${hostname}:${ssl}${req.originalUrl}`)
+        return res.redirect(301, `https://${hostname}:${SSL}${req.originalUrl}`)
     }
     return next()
 })
@@ -70,6 +74,7 @@ app.use('/dist', serve('../dist', true))
 app.use('/', serve('../public', true))
 app.use('/favicon.ico', serve('../public/favicon/favicon.ico', true))
 app.use('/sw.js', serve('../dist/sw.js', true))
+
 app.get('*', (req, res)=> {
     if (!renderer) {
         return res.end('waiting for compilation... refresh in a moment.')
@@ -82,26 +87,26 @@ app.get('*', (req, res)=> {
     render(req, res, {url: req.url}, s)
 })
 
-app.listen(port, host, (err)=> {
+app.listen(PORT, HOST, (err)=> {
     if (err) {
         console.error(err)
         return process.exit(1)
     }
-    console.log(`HTTP listening at: ${host}:${port}.`)
+    console.log(`HTTP listening at: ${HOST}:${PORT}.`)
 })
 
-if (isProd && !process.env.NO_SSL) {
+if (isProd && !NO_SSL) {
     const options = {
-        key: fs.readFileSync(resolve(process.env.KEY || '../private/server.key')),
-        cert: fs.readFileSync(resolve(process.env.CERT || '../private/server.crt')),
-        ca: process.env.CA ? fs.readFileSync(resolve(process.env.CA)) : null
+        key: fs.readFileSync(resolve(KEY)),
+        cert: fs.readFileSync(resolve(CERT)),
+        ca: CA ? fs.readFileSync(resolve(CA)) : null
     }
 
-    spdy.createServer(options, app).listen(ssl, host, (err)=> {
+    spdy.createServer(options, app).listen(SSL, HOST, (err)=> {
         if (err) {
             console.error(err)
             return process.exit(1)
         }
-        console.log(`HTTPS listening at: ${host}:${ssl}.`)
+        console.log(`HTTPS listening at: ${HOST}:${SSL}.`)
     })
 }

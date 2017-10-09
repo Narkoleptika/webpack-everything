@@ -8,7 +8,8 @@ const loadPage = name=> ()=> import(`pages/${name}`)
 const pages = [
     'Home',
     'Test',
-    'NotFound'
+    'NotFound'{{#if_eq apollo true}},
+    'Apollo'{{/if_eq}}
 ]
     .map(page=> ({ name: page, component: loadPage(page) }))
     .reduce((sum, { name, component })=> ({...sum, [name]: component}), {})
@@ -32,7 +33,11 @@ const options = {
         path: '/test',
         name: 'Test',
         component: pages.Test
-    }, {
+    }, {{#if_eq apollo true}}{
+        path: '/apollo',
+        name: 'Apollo',
+        component: pages.Apollo
+    }, {{/if_eq}}{
         path: '*',
         name: 'NotFound',
         component: pages.NotFound
