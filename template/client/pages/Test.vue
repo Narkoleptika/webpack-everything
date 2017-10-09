@@ -3,35 +3,36 @@
         <h1>Test</h1>
         <img class="img--responsive" src="~img/lorempixel.jpg" alt="lorempixel.com">
         <test-component />
-        <p>{{testContent}}</p>
+        <p>{{content}}</p>
     </div>
 </template>
 <script>
     import { mapState, mapActions } from 'vuex'
+    import { ucwords } from 'helpers'
+    import { titleMixin } from 'mixins'
     import TestComponent from 'components/TestComponent'
     export default {
+        mixins: [titleMixin],
         name: 'Test',
+        title() {
+            return this.testTitle
+        },
         computed: {
+            content() {
+                return ucwords(this.testContent)
+            },
             ...mapState([
+                'testTitle',
                 'testContent'
             ])
         },
         preFetch(store) {
-            return store.dispatch('getData', ['getTestTitle', 'getTestContent']).then(()=> {
-                return this.methods.meta(store)
-            })
+            return store.dispatch('getData', ['getTestTitle', 'getTestContent'])
         },
         beforeMount() {
-            this.getData(['getTestTitle', 'getTestContent']).then(()=> {
-                this.$emit('view', this.meta(this.$store))
-            })
+            this.getData(['getTestTitle', 'getTestContent'])
         },
         methods: {
-            meta: store=> ({
-                title: store.state.testTitle,
-                description: 'This is the Test page.',
-                keywords: 'test, page, internet'
-            }),
             ...mapActions([
                 'getData'
             ])

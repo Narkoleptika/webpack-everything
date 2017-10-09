@@ -21,6 +21,7 @@ const createRenderer = (serverBundle, clientManifest, template)=> {
     return require('vue-server-renderer').createBundleRenderer(serverBundle, {
         template,
         clientManifest,
+        inject: false,
         cache: require('lru-cache')({
             max: 1000,
             maxAge: 1000 * 60 * 15
@@ -66,7 +67,8 @@ app.use((req, res, next)=> {
 
 app.use(compression({threshold: 0}))
 app.use('/dist', serve('../dist', true))
-app.use('/public', serve('../public', true))
+app.use('/', serve('../public', true))
+app.use('/favicon.ico', serve('../public/favicon/favicon.ico', true))
 app.use('/sw.js', serve('../dist/sw.js', true))
 app.get('*', (req, res)=> {
     if (!renderer) {

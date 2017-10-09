@@ -1,5 +1,4 @@
 import createApp from './app'
-import { generateHead } from 'helpers'
 
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
@@ -39,8 +38,9 @@ export default context=> {
                 // inline the state in the HTML response. This allows the client-side
                 // store to pick-up the server-side state without having to duplicate
                 // the initial data fetching on the client.
-                context.head = generateHead(meta[0])
-                context.state = store.state
+
+                context.state = store.state{{#if_eq apollo true}}
+
                 resolve(app)
             }).catch(reject)
         })

@@ -20,6 +20,7 @@ const config = {
             assets: path.resolve(__dirname, '../client/assets'),
             img: path.resolve(__dirname, '../client/assets/img'),
             {{ preprocessor }}: path.resolve(__dirname, '../client/assets/{{ preprocessor }}'),
+            mixins: path.resolve(__dirname, '../client/mixins'),
             helpers: path.resolve(__dirname, '../client/helpers')
         },
         extensions: ['.js', '.vue', '.{{ preprocessorExtension }}']

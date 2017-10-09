@@ -24,6 +24,11 @@ module.exports = {
         '.eslintrc.js': 'eslint === true'
     },
     helpers: {
+        htmlTitle: ()=> '{{title}}',
+        htmlResourceHints: ()=> '{{{ renderResourceHints() }}}',
+        htmlStyles: ()=> '{{{ renderStyles() }}}',
+        htmlState: ()=> '{{{ renderState() }}}',
+        htmlScripts: ()=> '{{{ renderScripts() }}}',
         year: ()=> new Date().getFullYear(),
         preprocessorExtension({ data }) {
             let ret

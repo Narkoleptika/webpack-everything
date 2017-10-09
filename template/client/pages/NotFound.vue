@@ -5,20 +5,10 @@
     </div>
 </template>
 <script>
+    import { titleMixin } from 'mixins'
     export default {
+        mixins: [titleMixin],
         name: 'NotFound',
-        preFetch() {
-            return this.methods.meta()
-        },
-        beforeMount() {
-            this.$emit('view', this.meta())
-        },
-        methods: {
-            meta: ()=> ({
-                title: '404 | {{ project }}',
-                description: 'The page could not be found',
-                keywords: 'lost, 404, not found'
-            })
-        }
+        title: '404'
     }
 </script>

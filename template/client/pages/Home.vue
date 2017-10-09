@@ -29,20 +29,10 @@
     </div>
 </template>
 <script>
+    import { titleMixin } from 'mixins'
     export default {
+        mixins: [titleMixin],
         name: 'Home',
-        preFetch() {
-            return this.methods.meta()
-        },
-        beforeMount() {
-            this.$emit('view', this.meta())
-        },
-        methods: {
-            meta: ()=> ({
-                title: 'Home | {{ project }}',
-                description: 'This is the home page.',
-                keywords: 'home, page, internet'
-            })
-        }
+        title: 'Home'
     }
 </script>

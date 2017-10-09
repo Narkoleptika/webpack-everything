@@ -151,7 +151,7 @@
         </header>
         <main>
             <transition name="route" mode="out-in">
-                <router-view @view="view"></router-view>
+                <router-view></router-view>
             </transition>
         </main>
         <footer>
@@ -161,13 +161,6 @@
 </template>
 <script>
     export default {
-        name: 'App',
-        methods: {
-            view({title}) {
-                if (title) {
-                    document.title = title
-                }
-            }
-        }
+        name: 'App'
     }
 </script>
