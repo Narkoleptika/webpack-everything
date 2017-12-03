@@ -70,13 +70,13 @@ if (isProd) {
         new CompressionPlugin({
             asset: '[path].gz[query]',
             algorithm: 'gzip',
-            test: /\.js$|\.css$/,
-            threshold: 0,
+            test: /\.js$/,
+            threshold: 0
         }),
         new BrotliPlugin({
             asset: '[path].br[query]',
-            test: /\.js$|\.css$/,
-            threshold: 0,
+            test: /\.js$/,
+            threshold: 0
         })
     )
 }

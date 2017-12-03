@@ -1,12 +1,12 @@
 {{#if_eq apollo true}}require('isomorphic-fetch')
 {{/if_eq}}process.env.VUE_ENV = 'server'
 const fs = require('fs')
-const path = require('path')
 const express = require('express')
 const spdy = require('spdy')
+const compression = require('compression')
 const expressStaticGzip = require('express-static-gzip')
 const accepts = require('accepts')
-const compressStream = require('iltorb').compressStream
+const { compressStream } = require('iltorb')
 const { isProd, resolve, serve } = require('./helpers')
 const app = express()
 
@@ -70,11 +70,16 @@ app.use((req, res, next)=> {
     }
     return next()
 })
-
-app.use('/dist', expressStaticGzip(path.resolve(__dirname, '../dist'), {
-    enableBrotli: true,
-    indexFromEmptyFile: false
-}))
+app.use(compression({ threshold: 0 }))
+if (isProd) {
+    app.use('/dist', expressStaticGzip(resolve('../dist'), {
+        enableBrotli: true,
+        indexFromEmptyFile: false,
+        maxAge: 1000 * 60 * 60 * 24 * 30
+    }))
+} else {
+    app.use('/dist', serve('../dist', true))
+}
 app.use('/', serve('../public', true))
 app.use('/favicon.ico', serve('../public/favicon/favicon.ico', true))
 app.use('/sw.js', serve('../dist/sw.js', true))
@@ -86,8 +91,6 @@ app.get('*', (req, res)=> {
 
     const s = Date.now()
 
-    res.setHeader('Content-Type', 'text/html')
-
     let acceptsBr = accepts(req).encoding(['br'])
     if (acceptsBr) {
         res.setHeader('Content-Encoding', 'br')
@@ -97,6 +100,7 @@ app.get('*', (req, res)=> {
         .pipe(res)
     } else {
         res.setHeader('Content-Type', 'text/html')
+
         render(req, res, {url: req.url}, s)
         .pipe(res)
     }
