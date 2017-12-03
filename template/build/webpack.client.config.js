@@ -2,6 +2,8 @@ const base = require('./webpack.base.config')
 const HTMLPlugin = require('html-webpack-plugin')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
+const BrotliPlugin = require('brotli-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const webpack = require('webpack')
 const isProd = process.env.NODE_ENV === 'production'
@@ -64,6 +66,17 @@ if (isProd) {
                 'dist/img/**.*',
                 'dist/**.js'
             ]
+        }),
+        new CompressionPlugin({
+            asset: '[path].gz[query]',
+            algorithm: 'gzip',
+            test: /\.js$/,
+            threshold: 0
+        }),
+        new BrotliPlugin({
+            asset: '[path].br[query]',
+            test: /\.js$/,
+            threshold: 0
         })
     )
 }

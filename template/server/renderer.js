@@ -4,6 +4,9 @@ const fs = require('fs')
 const express = require('express')
 const spdy = require('spdy')
 const compression = require('compression')
+const expressStaticGzip = require('express-static-gzip')
+const accepts = require('accepts')
+const { compressStream } = require('iltorb')
 const { isProd, resolve, serve } = require('./helpers')
 const app = express()
 
@@ -59,7 +62,6 @@ const render = (req, res, context, s)=> renderer.renderToStream(context)
         }
         res.status(500).end('Internal Error 500')
     })
-    .pipe(res)
 
 app.use((req, res, next)=> {
     if (isProd && !req.secure && !NO_SSL) {
@@ -68,9 +70,16 @@ app.use((req, res, next)=> {
     }
     return next()
 })
-
-app.use(compression({threshold: 0}))
-app.use('/dist', serve('../dist', true))
+app.use(compression({ threshold: 0 }))
+if (isProd) {
+    app.use('/dist', expressStaticGzip(resolve('../dist'), {
+        enableBrotli: true,
+        indexFromEmptyFile: false,
+        maxAge: 1000 * 60 * 60 * 24 * 30
+    }))
+} else {
+    app.use('/dist', serve('../dist', true))
+}
 app.use('/', serve('../public', true))
 app.use('/favicon.ico', serve('../public/favicon/favicon.ico', true))
 app.use('/sw.js', serve('../dist/sw.js', true))
@@ -82,9 +91,19 @@ app.get('*', (req, res)=> {
 
     const s = Date.now()
 
-    res.setHeader('Content-Type', 'text/html')
+    let acceptsBr = accepts(req).encoding(['br'])
+    if (acceptsBr) {
+        res.setHeader('Content-Encoding', 'br')
 
-    render(req, res, {url: req.url}, s)
+        render(req, res, {url: req.url}, s)
+        .pipe(compressStream())
+        .pipe(res)
+    } else {
+        res.setHeader('Content-Type', 'text/html')
+
+        render(req, res, {url: req.url}, s)
+        .pipe(res)
+    }
 })
 
 app.listen(PORT, HOST, (err)=> {
