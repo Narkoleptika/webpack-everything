@@ -89,6 +89,8 @@ app.get('*', (req, res)=> {
         return res.end('waiting for compilation... refresh in a moment.')
     }
 
+    res.setHeader('Content-Type', 'text/html')
+
     const s = Date.now()
 
     let acceptsBr = accepts(req).encoding(['br'])
@@ -99,8 +101,6 @@ app.get('*', (req, res)=> {
         .pipe(compressStream())
         .pipe(res)
     } else {
-        res.setHeader('Content-Type', 'text/html')
-
         render(req, res, {url: req.url}, s)
         .pipe(res)
     }
