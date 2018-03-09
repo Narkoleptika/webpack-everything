@@ -9,6 +9,8 @@ if (window.__INITIAL_STATE__) {
     store.replaceState(window.__INITIAL_STATE__)
 }
 
+router.push(store.state.url)
+
 // wait until router has resolved all async before hooks
 // and async components...
 router.onReady(()=> {

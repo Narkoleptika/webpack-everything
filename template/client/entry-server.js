@@ -9,6 +9,7 @@ export default context=> {
     const { app, router, store{{#if_eq apollo true}}, apolloProvider{{/if_eq}} } = createApp()
     const s = Date.now()
     return new Promise((resolve, reject)=> {
+        store.state.url = context.url
         // set router's location
         router.push(context.url)
 

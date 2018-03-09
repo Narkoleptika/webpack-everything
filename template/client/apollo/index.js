@@ -1,12 +1,10 @@
 import Vue from 'vue'
-import {
-    ApolloClient,
-    createBatchingNetworkInterface
-} from 'apollo-client'
-import {
-    SubscriptionClient,
-    addGraphQLSubscriptions
-} from 'subscriptions-transport-ws'
+import { ApolloClient } from 'apollo-client'
+import { HttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { split } from 'apollo-link'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 import VueApollo from 'vue-apollo'
 
 const ORIGIN = process.env.ORIGIN
@@ -24,37 +22,47 @@ Vue.use(VueApollo)
 
 export default ()=> {
     let ssr = process.env.VUE_ENV === 'server'
-    let networkInterface
-    let initialState
+    let link
 
-    const batchingInterface = createBatchingNetworkInterface({
+    const httpLink = new HttpLink({
         uri: `${apiUrl}/graphql`
     })
 
+    const cache = new InMemoryCache()
+
     if (!ssr && typeof window !== 'undefined') {
         const state = window.__APOLLO_STATE__
-
         if (state) {
-            initialState = state.defaultClient
+            cache.restore(state.defaultClient)
         }
-
         // Create the subscription websocket client
-        const wsClient = new SubscriptionClient(`${wsUrl}/subscriptions`, {
-            reconnect: true,
-            lazy: true
+        const wsLink = new WebSocketLink({
+            uri: `${wsUrl}/subscriptions`,
+            options: {
+                reconnect: true,
+                lazy: true
+            }
         })
-
-        networkInterface = addGraphQLSubscriptions(batchingInterface, wsClient)
+        link = split(
+            ({ query })=> {
+                const { kind, operation } = getMainDefinition(query)
+                return kind === 'OperationDefinition' &&
+                    operation === 'subscription'
+            },
+            wsLink,
+            httpLink
+        )
     } else {
-        networkInterface = batchingInterface
+        link = httpLink
     }
 
     const apolloClient = new ApolloClient({
-        networkInterface,
+        link,
+        cache,
+        queryDeduplication: true,
         ...(ssr ? {
             ssrMode: true
         } : {
-            initialState,
             ssrForceFetchDelay: 100,
             connectToDevTools: true
         })
