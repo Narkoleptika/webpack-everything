@@ -53,6 +53,7 @@
     "eslint-config-narkoleptika": "^1.0.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-html": "^4.0.2",{{/if_eq}}
+    "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.5",{{#if_eq apollo true}}
     "graphql-tag": "^2.8.0",{{/if_eq}}
     "html-webpack-plugin": "^3.0.6",

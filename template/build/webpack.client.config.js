@@ -20,14 +20,14 @@ const config = Object.assign({}, base, {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             minChunks: function(module) {
-                return module.context && module.context.indexOf('node_modules') !== -1
+                return module.context && module.context.indexOf('node_modules') !== -1 && !/\.css$/.test(module.request)
             }
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'app',
             async: 'vendor-async',
             minChunks(module, count) {
-                return module.context && module.context.indexOf('node_modules') !== -1 && count >= 2
+                return module.context && module.context.indexOf('node_modules') !== -1 && count >= 2 && !/\.css$/.test(module.request)
             }
         }),
         new webpack.optimize.CommonsChunkPlugin({
@@ -51,7 +51,7 @@ if (isProd) {
             name: 'app',
             async: 'app-async',
             minChunks(module, count) {
-                return count >= 2
+                return count >= 2 && !/\.css$/.test(module.request)
             }
         }),
         new SWPrecacheWebpackPlugin({

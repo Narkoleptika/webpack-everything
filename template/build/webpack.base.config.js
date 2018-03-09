@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const isProd = process.env.NODE_ENV === 'production'
 const config = {
     devtool: '#eval-source-map',
@@ -37,14 +38,12 @@ const config = {
             use: {
                 loader: 'vue-loader',
                 options: {
+                    extractCSS: isProd,
                     postcss: [
                         require('autoprefixer')({
                             browsers: ['last 5 versions']
                         })
-                    ]{{#if_eq preprocessor 'scss'}},
-                    loaders: {
-                        scss: 'vue-style-loader!css-loader!sass-loader'
-                    }{{/if_eq}}
+                    ]
                 }
             }
         }, {
@@ -105,6 +104,7 @@ const config = {
 if (isProd) {
     config.devtool = '#source-map'
     config.plugins.push(
+        new ExtractTextPlugin({ filename: '[name].[chunkhash].css' }),
         new webpack.LoaderOptionsPlugin({
             minimize: true
         }),
